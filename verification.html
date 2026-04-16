@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Page</title>
+    <link rel="stylesheet" href="../css/Adminverification.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Verification Page</h1>
+        <p>User Id: <span id="displayApplicationNo"></span></p>
+        <p>Name: <span id="displayName"></span></p>
+        <p>Father's Name: <span id="displayFatherName"></span></p>
+        <p>Date of Birth: <span id="displayDob"></span></p>
+        <p>Permanent Address: <span id="displayPermanentAddress"></span></p>
+        <p>Temporary Address: <span id="displayTemporaryAddress"></span></p>
+        <p>Email ID: <span id="displayEmailId"></span></p>
+        <p>PAN No: <span id="displayPanNo"></span></p>
+        <p>Phone No: <span id="displayPhoneNo"></span></p>
+        <p>Username: <span id="displayUserName"></span></p>
+        <p>Password: <span id="displayPassword"></span></p>
+
+        <button id="btn" onclick="verify()">Verify Applicant</button>
+        <button id="btn3" onclick="issuePassport()">Issue Passport</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const userId = localStorage.getItem('userId');
+    
+            if (!userId) {
+                alert('User ID is missing.');
+                window.location.href = "Admincheckstatus.html";
+                return;
+            }
+    
+            fetch(`http://localhost:3000/verification/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(applicationDetails => {
+                document.getElementById('displayApplicationNo').textContent = applicationDetails.userid;
+                document.getElementById('displayName').textContent = applicationDetails.name;
+                document.getElementById('displayFatherName').textContent = applicationDetails.fatherName;
+                document.getElementById('displayDob').textContent = applicationDetails.dob;
+                document.getElementById('displayPermanentAddress').textContent = applicationDetails.permanentAddress;
+                document.getElementById('displayTemporaryAddress').textContent = applicationDetails.temporaryAddress;
+                document.getElementById('displayEmailId').textContent = applicationDetails.emailId;
+                document.getElementById('displayPanNo').textContent = applicationDetails.panNo;
+                document.getElementById('displayPhoneNo').textContent = applicationDetails.phoneNo;
+                document.getElementById('displayUserName').textContent = applicationDetails.userName;
+                document.getElementById('displayPassword').textContent = '********';
+            })
+            .catch(error => {
+                console.error('Error fetching application details:', error);
+                alert('Could not load application details. Please try again.');
+            });
+
+            document.getElementById('btn').addEventListener('click', verify);
+            document.getElementById('btn3').addEventListener('click', issuePassport);
+        };
+
+        function verify() {
+            const userId = localStorage.getItem('userId');
+    
+            if (!userId) {
+                alert('User ID is missing.');
+                return;
+            }
+    
+            fetch(`http://localhost:3000/api/admin/status-update/${userId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: "Verified" })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || "Applicant details verified.");
+            })
+            .catch(error => {
+                console.error('Error verifying applicant:', error);
+                alert('Could not verify applicant. Please try again.');
+            });
+        }
+    
+        function issuePassport() {
+            const userId = localStorage.getItem('userId');
+    
+            if (!userId) {
+                alert('User ID is missing.');
+                return;
+            }
+    
+            fetch(`http://localhost:3000/api/admin/status-update/${userId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: "Passport Issued" })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || "Passport issued.");
+            })
+            .catch(error => {
+                console.error('Error issuing passport:', error);
+                alert('Could not issue passport. Please try again.');
+            });
+        }
+    </script>    
+</body>
+</html>
