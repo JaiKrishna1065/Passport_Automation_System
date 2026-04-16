@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant Details Form</title>
+    <link rel="stylesheet" href="../css/UserApplicantdetails.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Applicant Details</h2>
+        <form class="applicant-form">
+            <div class="row">
+                <div class="column">
+                    <label for="userid">User Id</label>
+                    <input type="text" id="userid" name="userid" required>
+
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="fatherName">Father Name</label>
+                    <input type="text" id="fatherName" name="fatherName" required>
+
+                    <label for="dob">DOB</label>
+                    <input type="date" id="dob" name="dob" required>
+
+                    <label for="permanentAddress">Permanent Address</label>
+                    <textarea id="permanentAddress" name="permanentAddress" required></textarea>
+
+                    <label for="temporaryAddress">Temporary Address</label>
+                    <textarea id="temporaryAddress" name="temporaryAddress" required></textarea>
+                </div>
+                <div class="column">
+                    <label for="emailId">Email Id</label>
+                    <input type="email" id="emailId" name="emailId" required>
+
+                    <label for="panNo">PAN No</label>
+                    <input type="text" id="panNo" name="panNo" required>
+
+                    <label for="phoneNo">Phone No</label>
+                    <input type="text" id="phoneNo" name="phoneNo" required>
+
+                    <label for="userName">User Name</label>
+                    <input type="text" id="userName" name="userName" required>
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+            </div>
+            <div class="submit-row">
+                <button type="submit" class="submit-btn">Submit</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        async function applypassport() {
+            const formData = {
+                userid: document.getElementById('userid').value,
+                name: document.getElementById('name').value,
+                fatherName: document.getElementById('fatherName').value,
+                dob: document.getElementById('dob').value,
+                permanentAddress: document.getElementById('permanentAddress').value,
+                temporaryAddress: document.getElementById('temporaryAddress').value,
+                emailId: document.getElementById('emailId').value,
+                panNo: document.getElementById('panNo').value,
+                phoneNo: document.getElementById('phoneNo').value,
+                userName: document.getElementById('userName').value,
+                password: document.getElementById('password').value
+            };
+      
+            // Send the registration details to the server
+            const response = await fetch('http://localhost:3000/Applicantdetails', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+      
+            const result = await response.json();
+      
+            if (response.ok) {
+                alert('Application Received!');
+                document.querySelector('form').reset();
+                window.location.href = "UserHomePage.html";
+            } else {
+                alert(result.message || 'Application failed. Please try again.');
+            }
+        }
+      
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            applypassport();
+        });
+    </script>
+</body>
+</html>

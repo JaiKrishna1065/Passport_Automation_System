@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UserLogin</title>
+    <link rel="stylesheet" href="../css/userlogin.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WELCOME TO PASSPORT AUTOMATION SYSTEM</h1>
+        </div>
+        <div class="content">
+            <form id="loginForm">
+                <h1>USER SIGN IN</h1>
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <p><span class="para">New user?</span> <a href="newuser.html"><span>Register here!</span></a></p>
+                <button type="submit">Login</button>
+                <p><span class="admin">If you are an admin?</span><a href="/Admin/Adminlogin.html">Admin Login</a></p> 
+            </form>
+        </div>
+    </div>
+
+    <script>
+        async function loginUser() {
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+          const response = await fetch('http://localhost:3000/userlogin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password})
+          });
+      
+          const result = await response.json();
+      
+          if (response.ok) {
+            // Show a success alert and then navigate to the user's home page
+            alert("Login successful!");
+            window.location.href = "UserHomePage.html";
+          } else {
+            // Show an error message if login fails
+            alert(result.message || 'Login failed. Please check your credentials.');
+          }
+        }
+      
+        document.querySelector('form').addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent the form from submitting traditionally
+          loginUser(); // Call the login function
+        });
+    </script>      
+</body>
+</html>

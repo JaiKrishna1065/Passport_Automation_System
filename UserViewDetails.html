@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User View Applicant Details</title>
+    <link rel="stylesheet" href="../css/UserViewDetails.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Applicant Details</h2>
+        <input type="text" id="userid" placeholder="Enter Your User Id" required>
+        <button id="viewDetailsBtn">Enter</button> <!-- Use a button for the action -->
+        
+        <div class="result">
+            <p><strong>User Id:</strong> <span id="displayUserId"></span></p>
+            <p><strong>Name:</strong> <span id="displayName"></span></p>
+            <p><strong>Father Name:</strong> <span id="displayFatherName"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="displayDob"></span></p>
+            <p><strong>Permanent Address:</strong> <span id="displayPermanentAddress"></span></p>
+            <p><strong>Temporary Address:</strong> <span id="displayTemporaryAddress"></span></p>
+            <p><strong>Email Id:</strong> <span id="displayEmailId"></span></p>
+            <p><strong>PAN No:</strong> <span id="displayPanNo"></span></p>
+            <p><strong>Phone No:</strong> <span id="displayPhoneNo"></span></p>
+            <p><strong>User Name:</strong> <span id="displayUserName"></span></p>
+            <p><strong>Password:</strong> <span id="displayPassword"></span></p>
+            <p><strong>Status:</strong> <span id="displayStatus"></span></p> <!-- Fix id for displaying status -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('viewDetailsBtn').addEventListener('click', viewDetails);
+
+        async function viewDetails() {
+            const userid = document.getElementById('userid').value.trim(); // Get user input
+
+            if (!userid) {
+                alert('Please enter a User ID');
+                return;
+            }
+
+            try {
+                // Fetch data from backend using the userid
+                const response = await fetch(`http://localhost:3000/UserViewDetails?userid=${userid}`, {
+                    method: 'GET',
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    alert(error.message || 'Could not load application details. Please try again.');
+                    return;
+                }
+
+                const userDetails = await response.json();
+
+                // Populate the fields with the received data
+                document.getElementById('displayUserId').textContent = userDetails.userid || 'N/A';
+                document.getElementById('displayName').textContent = userDetails.name || 'N/A';
+                document.getElementById('displayFatherName').textContent = userDetails.fatherName || 'N/A';
+                document.getElementById('displayDob').textContent = userDetails.dob || 'N/A';
+                document.getElementById('displayPermanentAddress').textContent = userDetails.permanentAddress || 'N/A';
+                document.getElementById('displayTemporaryAddress').textContent = userDetails.temporaryAddress || 'N/A';
+                document.getElementById('displayEmailId').textContent = userDetails.emailId || 'N/A';
+                document.getElementById('displayPanNo').textContent = userDetails.panNo || 'N/A';
+                document.getElementById('displayPhoneNo').textContent = userDetails.phoneNo || 'N/A';
+                document.getElementById('displayUserName').textContent = userDetails.username || 'N/A';
+                document.getElementById('displayPassword').textContent = userDetails.password || 'N/A';
+                document.getElementById('displayStatus').textContent = userDetails.status || 'Pending'; // Display live status
+            } catch (error) {
+                console.error('Error loading details:', error);
+                alert('Could not load application details. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

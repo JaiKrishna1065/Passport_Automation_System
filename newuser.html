@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="../css/newuser.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+        </div>
+        <div class="content">
+            <form id="loginForm">
+                <h1>Register Here!!!</h1>
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        async function registerUser() {
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+          const email = document.getElementById('email').value;
+      
+          // Send the registration details to the server
+          const response = await fetch('http://localhost:3000/newuser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, email })
+          });
+      
+          const result = await response.json();
+      
+          if (response.ok) {
+            // If registration is successful, redirect or show a success message
+            alert('Registration successful!');
+            window.location.href = "userlogin.html"; // Redirect to login page
+          } else {
+            // Show an error message if registration fails
+            alert(result.message || 'Registration failed. Please try again.');
+          }
+        }
+      
+        document.querySelector('form').addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent the form from submitting traditionally
+          registerUser(); // Call the registration function
+        });
+      </script>      
+   
+</body>
+</html>
